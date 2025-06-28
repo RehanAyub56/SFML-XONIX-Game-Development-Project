@@ -1,25 +1,9 @@
 #include "menu.hpp"
+#include "level.hpp"
+#include "player.hpp"
 
-struct MenuContext {
-    sf::RenderWindow* window;
-    sf::RectangleShape* winclose;
-    sf::Font* font;
-    sf::Texture* image;
-    sf::Sprite* bg;
-    sf::Vector2i pos_mouse;
-    sf::Vector2f mouse_coord;
-    sf::Text texts[text_count];
-    std::size_t sizes[text_count];
-    const char* options[5];
-    float coords[5][2];
-    int position;
-    bool select, pressed;
-
-  
-  
-};
-void  setup_menu(MenuContext& ctx) {
-        ctx.window = new sf::RenderWindow();
+void setup_menu(MenuContext& ctx){
+        ctx.window =new sf::RenderWindow();
         ctx.winclose = new sf::RectangleShape();
         ctx.font = new sf::Font();
         ctx.image = new sf::Texture();
@@ -27,6 +11,7 @@ void  setup_menu(MenuContext& ctx) {
         ctx.position = 0;
         ctx.select = ctx.pressed = false;
     }
+    
     void cleanup_menu(MenuContext& ctx) {
     delete ctx.window;
     delete ctx.winclose;
@@ -52,7 +37,7 @@ void init_menu(MenuContext& ctx) {
     ctx.options[3] = "Scoreboard";
     ctx.options[4] = "Quit";
 
-    ctx.coords[0][0] = 630; ctx.coords[0][1] = 32;        //location of the names in grid
+    ctx.coords[0][0] = 620; ctx.coords[0][1] = 32;        //location of the names in grid
     ctx.coords[1][0] = 590; ctx.coords[1][1] = 191;
     ctx.coords[2][0] = 582; ctx.coords[2][1] = 282;
     ctx.coords[3][0] = 582; ctx.coords[3][1] = 370;
@@ -85,8 +70,7 @@ void loop_events(MenuContext& ctx) {
             ctx.window->close();
         }
 
-        ctx.pos_mouse = sf::Mouse::getPosition(*ctx.window);
-        ctx.mouse_coord = ctx.window->mapPixelToCoords(ctx.pos_mouse);
+        
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !ctx.pressed) {
             if (ctx.position < 4) {   // implementing movement of cursor on menu 
@@ -110,13 +94,10 @@ void loop_events(MenuContext& ctx) {
                 ctx.select = false;
             }
         }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !ctx.select) {
-            ctx.select = true;
-            if (ctx.position == 4) {
-                ctx.window->close();
+        else if (event.type == sf::Event::KeyPressed &&event.key.code == sf::Keyboard::Enter) {
+                ctx.select = true;
+                
             }
-        }
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             if (ctx.winclose->getGlobalBounds().contains(ctx.mouse_coord)) {
@@ -139,6 +120,38 @@ void run_menu(MenuContext& ctx) {
     while (ctx.window->isOpen()) {
         loop_events(ctx);
         draw_all(ctx);
-    }
+        if (ctx.select) { 
+        
+         if(ctx.position==1){
+          ctx.window->close();
+         MenuContext3 menu3;
+        setup_menu3(menu3);
+
+        init_menu3(menu3);
+       int selected2=run_menu3(menu3);
+         cleanup_menu3(menu3);
+         ctx.playernumber=selected2;
+         ctx.select = false;
+         }
+        
+          else if(ctx.position==2){
+          ctx.window->close();
+         MenuContext2 menu2;
+        setup_menu2(menu2);
+
+        init_menu2(menu2);
+        
+        int selected=run_menu2(menu2); 
+         cleanup_menu2(menu2);
+         ctx.difficulty_level=selected;
+         ctx.select = false;
+         
+         
+         }
+         else if (ctx.position == 4) {
+                ctx.window->close();
+            }
+         }      
+    } 
 }
 
