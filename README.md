@@ -1,3 +1,6 @@
+Author Name : Rehan Ayub
+Readme Have : The flow Diagram and All the Functioning of the project in the form of report 
+
 Menu setup:
 For the menu we have developed two files, one named as menu.cpp
 and menu.hpp. Menu.hpp represents all the functions, structure for
